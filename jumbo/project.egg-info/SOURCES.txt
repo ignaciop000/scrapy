@@ -1,0 +1,13 @@
+setup.py
+jumbo/__init__.py
+jumbo/items.py
+jumbo/middlewares.py
+jumbo/pipelines.py
+jumbo/settings.py
+jumbo/spiders/__init__.py
+jumbo/spiders/articles.py
+project.egg-info/PKG-INFO
+project.egg-info/SOURCES.txt
+project.egg-info/dependency_links.txt
+project.egg-info/entry_points.txt
+project.egg-info/top_level.txt

@@ -9,7 +9,7 @@ from scrapy import signals
 from scrapy.exporters import CsvItemExporter
 import csv
 
-class MercadolibrePipeline(object):
+class JumboPipeline(object):
 	def __init__(self):
 		self.files = {}
 
@@ -21,10 +21,10 @@ class MercadolibrePipeline(object):
 		return pipeline
 
 	def spider_opened(self, spider):
-		file = open('%s_items.csv' % spider.name, 'w+b')
+		file = open('%s_articles.csv' % spider.name, 'w+b')
 		self.files[spider] = file
 		self.exporter = CsvItemExporter(file)
-		self.exporter.fields_to_export = ['tituto']
+		self.exporter.fields_to_export = ['internal_id', 'name', 'price', 'unit_price', 'measure_unit', 'brand', 'article_type', 'promo', 'weighable', 'categories']
 		self.exporter.start_exporting()
 
 	def spider_closed(self, spider):
@@ -32,6 +32,7 @@ class MercadolibrePipeline(object):
 		file = self.files.pop(spider)
 		file.close()
 
-    def process_item(self, item, spider):
-    	self.exporter.export_item(item)
-        return item
+
+	def process_item(self, item, spider):
+		return item
+
