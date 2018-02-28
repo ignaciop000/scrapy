@@ -16,6 +16,7 @@ class ArticlesSpider(scrapy.Spider):
         # Recorre subclases (Ej: Alimentos secos -> Galletitas)
         for href in response.xpath('//ul[@class="sub_category"]/li/h2/a/@href'):
             url = response.urljoin(href.extract())
+            self.logger.info('%s', url)  
             yield scrapy.Request(url, callback=self.parse_subcategory)
 
 
@@ -29,26 +30,20 @@ class ArticlesSpider(scrapy.Spider):
         # Si hay elemento categoría recorrer categorías
         if (category) and (str_match is not None):
             
-            xpathQuery = ('//div[@class="atg_store_facetsGroup_options_catsub"]'
-                        '[1]/div/ul/li/a/@href')
+            xpathQuery = ('//div[@class="atg_store_facetsGroup_options_catsub"][1]/div/ul/li/a/@href')
             # Recorre subclases (Ej: Alimentos secos -> Galletitas)
             for href in response.xpath(xpathQuery):
                 url = response.urljoin(href.extract())
-                yield scrapy.Request(url,
-                    callback=self.parse_articles_follow_next_page)
+                yield scrapy.Request(url, callback=self.parse_articles_follow_next_page)
         else:  # Si no hay, recorrer elementos
-            yield scrapy.Request(response.url,
-                callback=self.parse_articles_follow_next_page,
-                dont_filter=True)
+            yield scrapy.Request(response.url, callback=self.parse_articles_follow_next_page, dont_filter=True)
 
 
     def parse_articles_follow_next_page(self, response):
         categories = []
 
         # 1st level category
-        xpathQuery = ('//div[@class="atg_store_refinementAncestorsLinks"]/'
-            'div[@class="atg_store_refinementAncestorsLinkCategory"][2]/'
-            'a/text()')
+        xpathQuery = ('//div[@class="atg_store_refinementAncestorsLinks"]/div[@class="atg_store_refinementAncestorsLinkCategory"][2]/a/text()')
         categories += response.xpath(xpathQuery).extract()
 
         # 2nd level category
