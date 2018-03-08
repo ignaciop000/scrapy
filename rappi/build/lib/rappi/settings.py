@@ -9,10 +9,10 @@
 #     https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://doc.scrapy.org/en/latest/topics/spider-middleware.html
 
-BOT_NAME = 'preciosClaros'
+BOT_NAME = 'rappi'
 
-SPIDER_MODULES = ['preciosClaros.spiders']
-NEWSPIDER_MODULE = 'preciosClaros.spiders'
+SPIDER_MODULES = ['rappi.spiders']
+NEWSPIDER_MODULE = 'rappi.spiders'
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
@@ -28,10 +28,10 @@ ROBOTSTXT_OBEY = True
 # See https://doc.scrapy.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
 #DOWNLOAD_DELAY = 3
-DOWNLOAD_DELAY = 3
+DOWNLOAD_DELAY = 1
 # The download delay setting will honor only one of:
 #CONCURRENT_REQUESTS_PER_DOMAIN = 16
-CONCURRENT_REQUESTS_PER_IP = 2
+CONCURRENT_REQUESTS_PER_IP = 16
 
 # Disable cookies (enabled by default)
 #COOKIES_ENABLED = False

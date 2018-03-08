@@ -1,0 +1,3 @@
+[scrapy]
+settings = rappi.settings
+
