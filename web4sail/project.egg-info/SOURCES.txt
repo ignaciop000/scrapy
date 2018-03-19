@@ -1,0 +1,13 @@
+setup.py
+project.egg-info/PKG-INFO
+project.egg-info/SOURCES.txt
+project.egg-info/dependency_links.txt
+project.egg-info/entry_points.txt
+project.egg-info/top_level.txt
+web4sail/__init__.py
+web4sail/items.py
+web4sail/middlewares.py
+web4sail/pipelines.py
+web4sail/settings.py
+web4sail/spiders/__init__.py
+web4sail/spiders/articles.py
