@@ -9,6 +9,7 @@ import scrapy
 
 class RappiItem(scrapy.Item):
 	name = scrapy.Field()
+	store_name = scrapy.Field()
 	have_discount = scrapy.Field()
 	description = scrapy.Field()
 	store_name = scrapy.Field()

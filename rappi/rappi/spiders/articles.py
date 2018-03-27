@@ -12,15 +12,15 @@ class RappiSpider(scrapy.Spider):
     start_urls = ['https://services.rappi.com.ar/api/base-crack/principal?device=2&lng=-58.428&lat=-34.577']
 
     def parse(self, response):
-#        self.logger.info('%s', response.headers)  
         mainUrl = 'https://services.rappi.com.ar/windu/corridors/store/'
         json_object = json.loads(response.body)
         for principal in json_object:
-        #    for store in principal['suboptions']:
-        #        self.logger.info('%s', store)
-        #        yield scrapy.Request(mainUrl + store['store_id'], callback=self.parseStore, meta={'store_id': store['store_id']})
             for store in principal['stores']:
-                yield scrapy.Request(mainUrl + store['store_id'], callback=self.parseStoreEan, meta={'store_id': store['store_id']})
+                yield scrapy.Request(mainUrl + store['store_id'], callback=self.parseStoreEan, meta={'store_id': store['store_id'], 'store_name': store['name']})
+        for principal in json_object:
+            for suboption in principal['suboptions']:
+                for store in suboption['stores']:
+                    yield scrapy.Request(mainUrl + store['store_id'], callback=self.parseStoreEan, meta={'store_id': store['store_id'], 'store_name': store['name']})                
 
     def parseStore(self, response):
         mainUrl = 'https://services.rappi.com.ar/windu/sub_corridors/store/'
@@ -34,7 +34,7 @@ class RappiSpider(scrapy.Spider):
         json_object = json.loads(response.body)
         id = response.meta.get('store_id')
         for corridor in json_object['corridors']:        
-            yield scrapy.Request(mainUrl + id + '/corridor/' + str(corridor['id']), callback=self.parteItemsEan)
+            yield scrapy.Request(mainUrl + id + '/corridor/' + str(corridor['id']), callback=self.parteItemsEan, meta={'store_name':response.meta.get('store_name')})
 
 
     def parseItems(self, response):
@@ -62,6 +62,7 @@ class RappiSpider(scrapy.Spider):
             for producto in subCorridor['products']:            
                 item = RappiItem()
                 item['name'] = producto['name']
+                item['store_name'] = response.meta.get('store_name')
                 item['have_discount'] = producto['have_discount']
                 item['description'] = producto['description']
                 item['store_id'] = producto['store_id']
