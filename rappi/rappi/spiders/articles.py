@@ -14,20 +14,23 @@ class RappiSpider(scrapy.Spider):
     def parse(self, response):
         mainUrl = 'https://services.rappi.com.ar/windu/corridors/store/'
         json_object = json.loads(response.body)
-        for principal in json_object:
-            for store in principal['stores']:
-                yield scrapy.Request(mainUrl + store['store_id'], callback=self.parseStoreEan, meta={'store_id': store['store_id'], 'store_name': store['name']})
+#        for principal in json_object:
+#            name = principal['name']
+#            for store in principal['stores']:
+#                yield scrapy.Request(mainUrl + store['store_id'], callback=self.parseStoreEan, meta={'store_id': store['store_id'], 'store_name': name})
         for principal in json_object:
             for suboption in principal['suboptions']:
+                name = suboption['name']
                 for store in suboption['stores']:
-                    yield scrapy.Request(mainUrl + store['store_id'], callback=self.parseStoreEan, meta={'store_id': store['store_id'], 'store_name': store['name']})                
+                    yield scrapy.Request(mainUrl + store['store_id'], callback=self.parseStore, meta={'store_id': store['store_id'], 'store_name': name})                
 
     def parseStore(self, response):
         mainUrl = 'https://services.rappi.com.ar/windu/sub_corridors/store/'
         json_object = json.loads(response.body)
         id = response.meta.get('store_id')
         for corridor in json_object['corridors']:        
-            yield scrapy.Request(mainUrl + id + '/corridor/' + str(corridor['id']), callback=self.parteItems)
+            yield scrapy.Request(mainUrl + id + '/corridor/' + str(corridor['id']), callback=self.parseItems, meta={'store_name':response.meta.get('store_name'),'corridor_id':corridor['id']})
+
 
     def parseStoreEan(self, response):
         mainUrl = 'https://services.rappi.com.ar/windu/sub_corridors/store/'
@@ -41,18 +44,23 @@ class RappiSpider(scrapy.Spider):
         json_object = json.loads(response.body)
         sub_corridors = json_object['sub_corridors']
         for subCorridor in sub_corridors:
-            for producto in subCorridor['products']:
+            category = subCorridor['name']
+            for producto in subCorridor['products']:            
                 item = RappiItem()
                 item['name'] = producto['name']
                 item['have_discount'] = producto['have_discount']
                 item['description'] = producto['description']
                 item['store_name'] = producto['store_name']
                 item['store_id'] = producto['store_id']
+                item['corridor_id'] = response.meta.get('corridor_id')
                 item['price'] = producto['price']
                 item['real_price'] = producto['real_price']
                 item['id'] = producto['id']
                 item['discount'] = producto['discount']
                 item['is_available'] = producto['is_available']
+                item['balance_price'] = producto['balance_price']
+                item['categories'] = category
+                item['corridor_name'] = response.meta.get('store_name')
                 yield item
 
     def parteItemsEan(self, response):

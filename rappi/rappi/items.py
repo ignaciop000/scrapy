@@ -25,3 +25,5 @@ class RappiItem(scrapy.Item):
 	quantity = scrapy.Field()
 	unit_type = scrapy.Field()
 	categories = scrapy.Field()
+	corridor_id = scrapy.Field()
+	corridor_name = scrapy.Field()
