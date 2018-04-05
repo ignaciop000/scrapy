@@ -15,7 +15,7 @@ class Web4SailSpider(scrapy.Spider):
     	mainUrl = 'http://www.4sail.com.ar/Categorias/Veleros/Tipo/basica/pagina/'
         #urlUltima = response.xpath("'(//li[@id='setPaginas']/a[contains(text(),'ltima >>')])[1]/@href'")
         #self.logger.info('%s', urlUltima)
-        lastPage = 2
+        lastPage = 125
         for x in xrange(1, lastPage + 1):
         	yield scrapy.Request(mainUrl + str(x) + '/orden/fecha', callback=self.parseItems)
 
