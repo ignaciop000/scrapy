@@ -13,4 +13,3 @@ class GarbarinoItem(scrapy.Item):
     # name = scrapy.Field()
     name = scrapy.Field()
     price = scrapy.Field()
-    timestamp= scrapy.Field()
